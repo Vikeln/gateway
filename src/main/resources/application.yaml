@@ -1,0 +1,49 @@
+## YAML Template.
+spring:
+  profiles: stage
+  application:
+    name: api-gateway
+  main:
+    banner-mode: "off"
+server:
+  port: 8080
+zuul:
+  host:
+    connect-timeout-millis: 120000000
+    socket-timeout-millis: 120000000
+  sensitiveHeaders:
+  routes:
+    customer-service:
+      url: http://revenue-collection-customers-282ld:8081
+      path: /customers/**
+      serviceId: customer-service
+
+    accounts-service:
+      url: http://revenue-collection-accounts-6xn5p:8082
+      path: /accounts/**
+      serviceId: accounts-service
+
+
+hystrix:
+  command:
+    myusers-service:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 120000000
+
+ribbon:
+  eureka:
+    enabled: false
+
+customer-service:
+  ribbon:
+    listOfServers: "http://revenue-collection-customers-282ld:8081"
+
+accounts-service:
+  ribbon:
+    listOfServers: "http://revenue-collection-accounts-6xn5p:8082"
+
+swagger:
+  config:
+    refreshrate: 5000
